@@ -2,10 +2,11 @@ package fluent
 
 import (
 	"fmt"
-	"github.com/lus/fluent.go/fluent/parser/ast"
-	"golang.org/x/text/feature/plural"
 	"strconv"
 	"strings"
+
+	"github.com/lus/fluent.go/fluent/parser/ast"
+	"golang.org/x/text/feature/plural"
 )
 
 var pluralStrings = map[plural.Form]string{
@@ -235,16 +236,16 @@ func (resolver *resolver) matchesVariant(selector, variant Value) bool {
 }
 
 func (resolver *resolver) resolvePattern(pattern *ast.Pattern) Value {
-	result := ""
+	var result strings.Builder
 	for _, element := range pattern.Elements {
 		if text, ok := element.(*ast.Text); ok {
-			result += text.Value
+			result.WriteString(text.Value)
 			continue
 		}
-		result += resolver.resolveExpression(element.(*ast.Placeable).Expression).String()
+		result.WriteString(resolver.resolveExpression(element.(*ast.Placeable).Expression).String())
 	}
 	return &StringValue{
-		Value: result,
+		Value: result.String(),
 	}
 }
 
